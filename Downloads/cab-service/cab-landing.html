@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SwiftRide — Fastest Taxi Service</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --yellow:#ffd400; --yellow-d:#f2bd00;
+    --ink:#121316; --ink-2:#2a2c33; --grey:#6c6f7a;
+    --line:#ececef; --bg:#ffffff; --soft:#f7f7f5;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased}
+  h1,h2,h3,.logo,.btn{font-family:'Sora',sans-serif}
+  a{text-decoration:none;color:inherit}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+  svg{display:block}
+  .ico{width:24px;height:24px;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 24px;border-radius:10px;font-weight:700;font-size:15px;cursor:pointer;border:none;transition:.15s}
+  .btn-y{background:var(--ink);color:var(--yellow)}
+  .btn-y:hover{transform:translateY(-2px)}
+  .btn-d{background:var(--yellow);color:var(--ink)}
+  .btn-d:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(242,189,0,.45)}
+  .btn-o{background:transparent;border:1.6px solid var(--line);color:var(--ink)}
+  .btn-o:hover{border-color:var(--ink)}
+
+  /* nav */
+  header{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  nav{display:flex;align-items:center;justify-content:space-between;height:68px}
+  .logo{display:flex;align-items:center;gap:9px;font-weight:800;font-size:21px;letter-spacing:-.5px}
+  .logo-badge{width:34px;height:34px;border-radius:9px;background:var(--yellow);display:grid;place-items:center;color:var(--ink)}
+  .nav-links{display:flex;gap:30px;font-size:15px;font-weight:500;color:var(--ink-2)}
+  .nav-links a:hover{color:var(--ink)}
+  .nav-r{display:flex;gap:12px;align-items:center}
+  .burger{display:none;background:none;border:none;cursor:pointer;color:var(--ink)}
+
+  /* hero */
+  .hero{padding:60px 0 50px;background:
+    radial-gradient(900px 420px at 88% -10%, #fff7cc 0%, transparent 60%),
+    var(--bg)}
+  .hero-grid{display:grid;grid-template-columns:1.02fr .98fr;gap:40px;align-items:center}
+  .tag{display:inline-flex;align-items:center;gap:7px;background:var(--ink);color:var(--yellow);padding:6px 13px;border-radius:999px;font-size:12.5px;font-weight:700;letter-spacing:.4px;margin-bottom:20px}
+  .tag .ico{width:15px;height:15px;stroke-width:2.2}
+  h1{font-size:clamp(36px,5vw,58px);line-height:1.02;letter-spacing:-1.6px;font-weight:800}
+  h1 em{font-style:normal;color:var(--yellow-d)}
+  .lead{font-size:17.5px;color:var(--grey);margin:18px 0 26px;max-width:440px}
+  .hero-cta{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:30px}
+  .callbox{display:inline-flex;align-items:center;gap:13px;background:#fff;border:1.6px solid var(--line);border-radius:14px;padding:12px 18px 12px 14px;transition:.15s}
+  .callbox:hover{border-color:var(--ink);transform:translateY(-2px);box-shadow:0 12px 28px rgba(18,19,22,.1)}
+  .callbox-ic{width:42px;height:42px;border-radius:10px;background:var(--yellow);display:grid;place-items:center;color:var(--ink);flex:none}
+  .callbox-ic .ico{width:22px;height:22px}
+  .callbox-t{display:flex;flex-direction:column;line-height:1.25}
+  .callbox .cl{font-size:12px;color:var(--grey);font-weight:600}
+  .callbox .cn{font-family:'Sora';font-weight:800;font-size:23px;letter-spacing:-.4px}
+
+  .hero-art{position:relative}
+  .hero-art .scene{width:100%;height:auto;filter:drop-shadow(0 26px 40px rgba(18,19,22,.16))}
+
+  /* data form */
+  .form-card{background:var(--ink);color:#fff;border-radius:18px;padding:24px;box-shadow:0 24px 50px rgba(18,19,22,.22);position:absolute;right:0;bottom:-44px;width:320px}
+  .form-card h3{font-size:17px;display:flex;align-items:center;gap:8px}
+  .form-card h3 .ico{width:18px;height:18px;color:var(--yellow)}
+  .form-card .sub{font-size:12.5px;color:#9fa2ac;margin:4px 0 16px}
+  .fld{margin-bottom:10px}
+  .fld label{font-size:11px;font-weight:600;color:#b9bcc4;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:5px}
+  .input{display:flex;align-items:center;gap:8px;background:#22242b;border:1.4px solid #33363f;border-radius:9px;padding:0 11px;transition:border-color .15s}
+  .input:focus-within{border-color:var(--yellow)}
+  .input .ico{width:16px;height:16px;color:#7e818b;flex:none}
+  .input input,.input select{flex:1;background:none;border:none;outline:none;color:#fff;font-family:inherit;font-size:14px;padding:11px 0}
+  .input select option{color:#111}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .form-card .btn{width:100%;justify-content:center;margin-top:6px}
+  .quote{margin:10px 0 0;text-align:center;font-size:13.5px;color:var(--yellow);display:none}
+
+  /* section */
+  section{padding:74px 0}
+  .head{text-align:center;max-width:600px;margin:0 auto 46px}
+  .head .k{color:var(--yellow-d);font-weight:700;font-size:13px;letter-spacing:1.2px;text-transform:uppercase}
+  .head h2{font-size:clamp(27px,3.6vw,38px);letter-spacing:-1px;margin:8px 0 10px}
+  .head p{color:var(--grey);font-size:16.5px}
+
+  /* services */
+  .services{background:var(--soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:60px}
+  .svc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+  .svc{background:#fff;border:1px solid var(--line);border-radius:14px;padding:26px 22px;transition:.2s}
+  .svc:hover{transform:translateY(-5px);box-shadow:0 16px 36px rgba(18,19,22,.09);border-color:transparent}
+  .svc-ic{width:50px;height:50px;border-radius:12px;background:var(--yellow);display:grid;place-items:center;color:var(--ink);margin-bottom:16px}
+  .svc-ic .ico{width:26px;height:26px;stroke-width:1.7}
+  .svc h3{font-size:18px;margin-bottom:6px}
+  .svc p{color:var(--grey);font-size:14.5px}
+
+  /* why row */
+  .why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .why{display:flex;gap:14px;align-items:flex-start}
+  .why-ic{width:44px;height:44px;border-radius:50%;background:#fff7cc;display:grid;place-items:center;color:var(--ink-2);flex:none}
+  .why-ic .ico{width:22px;height:22px}
+  .why h3{font-size:16.5px;margin-bottom:3px}
+  .why p{color:var(--grey);font-size:14px}
+
+  /* cta */
+  .cta{background:var(--ink);border-radius:22px;padding:54px;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:24px;position:relative;overflow:hidden}
+  .cta::after{content:"";position:absolute;width:280px;height:280px;border-radius:50%;background:var(--yellow);opacity:.16;right:-70px;top:-90px}
+  .cta h2{font-size:clamp(24px,3.4vw,34px);letter-spacing:-.8px;position:relative}
+  .cta p{color:#b9bcc4;margin-top:8px;position:relative}
+  .cta .phone{display:flex;align-items:center;gap:12px;position:relative}
+  .cta .phone .num{font-family:'Sora';font-weight:800;font-size:26px;color:var(--yellow)}
+  .cta .phone .ico{width:30px;height:30px;color:var(--yellow)}
+
+  /* footer */
+  footer{border-top:1px solid var(--line);padding:34px 0;margin-top:74px}
+  .foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;color:var(--grey);font-size:14px}
+  .foot .logo{font-size:18px}
+  .foot .links{display:flex;gap:22px}
+  .foot .links a:hover{color:var(--ink)}
+
+  @media(max-width:900px){
+    .hero-grid,.svc-grid,.why-grid{grid-template-columns:1fr}
+    .svc-grid{grid-template-columns:1fr 1fr}
+    .nav-links{display:none}.burger{display:block}
+    .form-card{position:static;width:100%;margin-top:20px}
+    .hero-art .scene{max-width:440px;margin:0 auto}
+    .cta{flex-direction:column;text-align:center;padding:38px 24px}
+  }
+  @media(max-width:520px){ .svc-grid{grid-template-columns:1fr} .row2{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <nav>
+      <a href="#" class="logo">
+        <span class="logo-badge"><svg class="ico" viewBox="0 0 24 24"><path d="M5 17h14M5 17a2 2 0 0 1-2-2v-2.5L5 8h14l2 4.5V15a2 2 0 0 1-2 2M5 17v1m14-1v1M7 8V6h10v2"/><circle cx="7.5" cy="17" r="1.4"/><circle cx="16.5" cy="17" r="1.4"/></svg></span>
+        SwiftRide
+      </a>
+      <div class="nav-links">
+        <a href="#services">Services</a>
+        <a href="#why">Why us</a>
+        <a href="https://wa.me/918000335005?text=Hi%20SwiftRide!%20I%20would%20like%20to%20book%20a%20ride." target="_blank" rel="noopener">Book</a>
+        <a href="#">Drive with us</a>
+      </div>
+      <div class="nav-r">
+        <a href="https://wa.me/918000335005?text=Hi%20SwiftRide!%20I%20would%20like%20to%20book%20a%20ride." target="_blank" rel="noopener" class="btn btn-d">Book now</a>
+      </div>
+      <button class="burger"><svg class="ico" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="book">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="tag"><svg class="ico" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg> Fastest pickups in town</span>
+      <h1>Your ride is just<br>a <em>tap away.</em></h1>
+      <p class="lead">Reliable taxis, upfront fares, and vetted drivers — booked in seconds, 24 hours a day.</p>
+      <div class="hero-cta">
+        <a href="https://wa.me/918000335005?text=Hi%20SwiftRide!%20I%20would%20like%20to%20book%20a%20ride." target="_blank" rel="noopener" class="btn btn-y">Book a ride
+          <svg class="ico" viewBox="0 0 24 24" style="width:18px;height:18px"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a href="#services" class="btn btn-o">View services</a>
+      </div>
+      <a href="tel:+918000335005" class="callbox">
+        <span class="callbox-ic"><svg class="ico" viewBox="0 0 24 24"><path d="M5 4h4l2 5-3 2a12 12 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg></span>
+        <span class="callbox-t"><span class="cl">Call or WhatsApp us</span><span class="cn">+91 80003 35005</span></span>
+      </a>
+    </div>
+
+    <div class="hero-art">
+      <!-- taxi illustration -->
+      <svg class="scene" viewBox="0 0 520 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Yellow taxi illustration">
+        <defs>
+          <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#fff7cc"/><stop offset="1" stop-color="#ffffff"/>
+          </linearGradient>
+          <linearGradient id="body" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#ffe14d"/><stop offset="1" stop-color="#f2bd00"/>
+          </linearGradient>
+        </defs>
+        <rect x="0" y="0" width="520" height="360" rx="22" fill="url(#sky)"/>
+        <!-- buildings -->
+        <g fill="#ededf0">
+          <rect x="36" y="70" width="58" height="150" rx="4"/>
+          <rect x="104" y="40" width="46" height="180" rx="4"/>
+          <rect x="160" y="92" width="40" height="128" rx="4"/>
+          <rect x="330" y="58" width="50" height="162" rx="4"/>
+          <rect x="388" y="86" width="44" height="134" rx="4"/>
+          <rect x="440" y="50" width="48" height="170" rx="4"/>
+        </g>
+        <g fill="#ffffff" opacity=".85">
+          <rect x="46" y="84" width="12" height="14"/><rect x="66" y="84" width="12" height="14"/>
+          <rect x="46" y="108" width="12" height="14"/><rect x="66" y="108" width="12" height="14"/>
+          <rect x="114" y="56" width="12" height="14"/><rect x="132" y="56" width="12" height="14"/>
+          <rect x="114" y="80" width="12" height="14"/><rect x="132" y="80" width="12" height="14"/>
+          <rect x="340" y="74" width="12" height="14"/><rect x="360" y="74" width="12" height="14"/>
+          <rect x="452" y="66" width="12" height="14"/><rect x="470" y="66" width="12" height="14"/>
+          <rect x="452" y="90" width="12" height="14"/><rect x="470" y="90" width="12" height="14"/>
+        </g>
+        <!-- road -->
+        <rect x="0" y="252" width="520" height="86" fill="#2a2c33"/>
+        <g stroke="#ffd400" stroke-width="5" stroke-dasharray="26 22" stroke-linecap="round">
+          <line x1="10" y1="298" x2="510" y2="298"/>
+        </g>
+        <!-- taxi -->
+        <g>
+          <ellipse cx="262" cy="276" rx="150" ry="14" fill="#000" opacity=".14"/>
+          <path d="M132 232 q6-54 40-58 l34-4 q22-22 56-22 h26 q34 0 50 26 l38 6 q34 6 36 38 l0 14 q0 8-9 8 h-22 a22 22 0 0 0-44 0 h-118 a22 22 0 0 0-44 0 h-23 q-9 0-9-8 z" fill="url(#body)" stroke="#1b1c20" stroke-width="3"/>
+          <path d="M212 160 q-26 0-40 18 l-12 30 h70 z" fill="#cfe6f5" stroke="#1b1c20" stroke-width="2.5"/>
+          <path d="M236 160 h24 q26 0 40 20 l8 26 h-72 z" fill="#cfe6f5" stroke="#1b1c20" stroke-width="2.5"/>
+          <rect x="226" y="138" width="56" height="20" rx="5" fill="#1b1c20"/>
+          <text x="254" y="153" font-family="Sora,sans-serif" font-size="13" font-weight="800" fill="#ffd400" text-anchor="middle">TAXI</text>
+          <g fill="#1b1c20">
+            <rect x="150" y="214" width="14" height="9"/><rect x="178" y="214" width="14" height="9"/>
+            <rect x="206" y="214" width="14" height="9"/><rect x="164" y="223" width="14" height="9"/>
+            <rect x="192" y="223" width="14" height="9"/><rect x="220" y="223" width="14" height="9"/>
+          </g>
+          <circle cx="362" cy="214" r="7" fill="#fff" stroke="#1b1c20" stroke-width="2.5"/>
+          <circle cx="206" cy="244" r="24" fill="#1b1c20"/><circle cx="206" cy="244" r="10" fill="#c9ccd2"/>
+          <circle cx="324" cy="244" r="24" fill="#1b1c20"/><circle cx="324" cy="244" r="10" fill="#c9ccd2"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="wrap">
+    <div class="head">
+      <span class="k">What we offer</span>
+      <h2>Services for every journey</h2>
+      <p>From a quick city hop to an all-day hire, pick the ride that fits.</p>
+    </div>
+    <div class="svc-grid">
+      <div class="svc">
+        <div class="svc-ic"><svg class="ico" viewBox="0 0 24 24"><path d="M2 16l9-5 11 2-2 4-7-1-4 3-2-1zM7 13l3-5"/></svg></div>
+        <h3>Airport transfers</h3>
+        <p>Flat fares and flight tracking so your cab is always on time.</p>
+      </div>
+      <div class="svc">
+        <div class="svc-ic"><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="9" width="18" height="11" rx="2"/><path d="M7 9V6h10v3M3 14h18"/></svg></div>
+        <h3>City rides</h3>
+        <p>Quick, metered trips across town with nearby drivers in minutes.</p>
+      </div>
+      <div class="svc">
+        <div class="svc-ic"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+        <h3>Hourly hire</h3>
+        <p>Keep a car and driver on standby for meetings or errands.</p>
+      </div>
+      <div class="svc">
+        <div class="svc-ic"><svg class="ico" viewBox="0 0 24 24"><path d="M3 12h13l4 4v-9l-4 4M3 7v10"/></svg></div>
+        <h3>Outstation</h3>
+        <p>Comfortable long-distance trips with transparent round-trip pricing.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section id="why">
+  <div class="wrap">
+    <div class="head">
+      <span class="k">Why SwiftRide</span>
+      <h2>Built for a better ride</h2>
+    </div>
+    <div class="why-grid">
+      <div class="why">
+        <div class="why-ic"><svg class="ico" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9.5 12l2 2 3.5-4"/></svg></div>
+        <div><h3>Vetted & safe</h3><p>Background-checked drivers, live trip sharing, 24/7 support.</p></div>
+      </div>
+      <div class="why">
+        <div class="why-ic"><svg class="ico" viewBox="0 0 24 24"><path d="M12 2v20M17 6H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+        <div><h3>Upfront pricing</h3><p>See the fare before you book. No surge surprises, no hidden fees.</p></div>
+      </div>
+      <div class="why">
+        <div class="why-ic"><svg class="ico" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg></div>
+        <div><h3>Lightning fast</h3><p>Average pickup in 3 minutes with real-time driver tracking.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="cta">
+      <div>
+        <h2>Need a ride right now?</h2>
+        <p>Call our 24/7 dispatch or book online in seconds.</p>
+      </div>
+      <a href="https://wa.me/918000335005?text=Hi%20SwiftRide!%20I%20would%20like%20to%20book%20a%20ride." target="_blank" rel="noopener" class="phone">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M5 4h4l2 5-3 2a12 12 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>
+        <span class="num">+91 80003 35005</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <a href="#" class="logo">
+      <span class="logo-badge"><svg class="ico" viewBox="0 0 24 24"><path d="M5 17h14M5 17a2 2 0 0 1-2-2v-2.5L5 8h14l2 4.5V15a2 2 0 0 1-2 2M7 8V6h10v2"/><circle cx="7.5" cy="17" r="1.4"/><circle cx="16.5" cy="17" r="1.4"/></svg></span>
+      SwiftRide
+    </a>
+    <div class="links">
+      <a href="#services">Services</a>
+      <a href="#why">Why us</a>
+      <a href="https://wa.me/918000335005?text=Hi%20SwiftRide!%20I%20would%20like%20to%20book%20a%20ride." target="_blank" rel="noopener">Book</a>
+      <a href="#">Privacy</a>
+    </div>
+    <span>© 2026 SwiftRide Inc.</span>
+  </div>
+</footer>
+</body>
+</html>
